@@ -57,6 +57,7 @@
 - 浏览器验证使用 Codex 内置浏览器；未在原生 Safari、真实 iOS/Android、Bootstrap Vue 或 Ionic 完整应用中逐一复测。隐藏容器和 DPR 对应机制已有回归覆盖。
 - 验证了 Jest 报错对应的包导入边界；没有运行完整 Jest/Nuxt 消费者工程。
 - Vue 2 已结束维护，本次保留原有主版本；没有执行 Vue 3 迁移。
+- 发布前 `npm audit --omit=dev` 报告 1 项低危 Vue 2 `parseHTML` ReDoS，运行时依赖无高危或严重项；自动修复要求升级 Vue 3，不属于此次 Vue 2 兼容发布范围。
 - 导入图片和水印不是可编辑笔画。PNG/JPEG 包含它们；SVG 导出仍只包含 SignaturePad 记录的笔画。
 
 ## 本地运行
