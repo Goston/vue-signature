@@ -1,44 +1,28 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   entry: './src/main.js',
-
+  context: __dirname,
   module: {
     rules: [
-      // use babel-loader for js files
-      { test: /\.js$/, use: 'babel-loader' },
-      // use vue-loader for .vue files
+      { test: /\.js$/, exclude: /node_modules/, use: 'babel-loader' },
       { test: /\.vue$/, use: 'vue-loader' }
     ]
   },
-  // default for pretty much every project
-  context: __dirname,
-  // specify your entry/main file
+  plugins: [new VueLoaderPlugin()],
   output: {
-    // specify your output directory...
-    path: path.resolve(__dirname, './dist'),
-    // and filename
-    filename: 'vue-signature.js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'vue-signature.js',
+    library: { name: 'vueSignature', type: 'umd', export: 'default' },
+    globalObject: 'typeof self !== "undefined" ? self : this',
+    clean: true
+  },
+  devServer: {
+    static: [
+      { directory: __dirname },
+      { directory: path.resolve(__dirname, 'node_modules/vue/dist'), publicPath: '/vendor/vue' }
+    ],
+    devMiddleware: { publicPath: '/dist/' }
   }
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  ])
 }
